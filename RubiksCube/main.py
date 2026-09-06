@@ -12,6 +12,8 @@ import random
 import asyncio
 
 
+HEADLESS = False
+executedMoves = []
 
 
 
@@ -413,9 +415,10 @@ def checkMovement():
 
 
 def turnCubes(cubes, axis, change, row, show = True):
-	show = True
+	if HEADLESS:
+		show = False
 	clock = pygame.time.Clock()
-	global realChange, xMovement, yMovement, zMovement, posChange, solving
+	global realChange, xMovement, yMovement, zMovement, posChange, solving, executedMoves
 
 	if solving:
 		moveLstForSolved.append([cubes, axis, change, row])
@@ -425,6 +428,9 @@ def turnCubes(cubes, axis, change, row, show = True):
 
 	else:
 		change = realChange
+
+	if HEADLESS:
+		executedMoves.append([axis, change, row])
 
 	for i in range(int(90/abs(change))):
 
@@ -2092,12 +2098,5 @@ async def main(sideLength):
 
 
 # random.seed(1123)
-asyncio.run(main(3))
-
-
-
-
-
-
-
-		
+if __name__ == "__main__":
+	asyncio.run(main(3))

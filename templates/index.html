@@ -1,100 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Games</title>
-    <style>
-        body {
-            font-family: "Inter", sans-serif;
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 20px;
-            color: #333;
-            background-color: #fafafa;
-            text-align: center;
-        }
-        h1 {
-            font-size: 28px;
-            font-weight: 600;
-        }
-        .project {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        .project h2 {
-            font-size: 20px;
-            margin: 0;
-        }
-        .project p {
-            font-size: 14px;
-            color: #666;
-        }
-        .project-links {
-            margin-top: 12px;
-            display: flex;
-            gap: 10px;
-        }
-        .project-links a {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            font-size: 14px;
-            font-weight: 500;
-            text-decoration: none;
-            border-radius: 8px;
-            color: #333;
-            background: #eee;
-            transition: background 0.2s ease-in-out;
-        }
-        .project-links a:hover {
-            background: #ddd;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Small games and experiments by Rithwik Gupta, made mostly around 2020–2021 and restored for the web.">
+  <title>Games — Rithwik Gupta</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script defer src="{{ url_for('static', filename='gallery.js') }}"></script>
 </head>
 <body>
-    <h1>Python Games</h1>
-
-    <div class="project">
-        <h2>Connect4 (Late 2020)</h2>
-        <p>Connect 4 engine with Minimax</p>
-        <div class="project-links">
-            <a href="/Connect4/play">Play in Browser</a>
-            <a href="https://github.com/Rithwik-G/games/tree/main/Connect4" target="_blank">View Source </a>
-        </div>
+  <header class="site-header wrap">
+    <a class="wordmark" href="/" aria-label="Games home"><span>RG</span> / games</a>
+    <a class="quiet-link" href="https://rithwikg.com">rithwikg.com ↗</a>
+  </header>
+  <main class="wrap">
+    <section class="intro">
+      <p class="eyebrow">An old folder, made playable</p>
+      <h1>Small games and<br>side projects.</h1>
+      <p class="lede">I made most of these in Python around 2020–2021. They’ve been lightly restored for the browser—same ideas, fewer rough edges.</p>
+    </section>
+    <div class="collection-heading">
+      <h2>The collection</h2>
+      <p>{{ projects|length }} things to play with</p>
     </div>
-
-    <div class="project">
-        <h2>Snake (Early 2021)</h2>
-        <p>Snake Game (AI using Hamiltonian paths)</p>
-        <div class="project-links">
-            <a href="/Snake/play">Play in Browser</a>
-            <a href="/SnakeAI/play">Watch the AI</a>
-            <a href="https://github.com/Rithwik-G/games/tree/main/SnakeAI" target="_blank">View Source</a>
-        </div>
-    </div>
-
-    <div class="project">
-        <h2>Rubik's Cube Solver</h2>
-        <p>Solves a Rubik's Cube</p>
-        <div class="project-links">
-            <a href="/">Play in Browser (Coming Soon)</a>
-            <a href="https://github.com/Rithwik-G/games/tree/main/RubiksCube" target="_blank">View Source</a>
-        </div>
-    </div>
-
-    <div class="project">
-        <h2>Hangman</h2>
-        <p>Simpled Hangman Game</p>
-        <div class="project-links">
-            <a href="/">Play in Browser (Coming Soon)</a>
-            <a href="https://github.com/Rithwik-G/games/tree/main/Hangman" target="_blank">View Source</a>
-        </div>
-    </div>
-
+    <section class="project-grid" aria-label="Games and projects">
+      {% for project in projects %}
+      <a class="project-card" href="{{ url_for('play', slug=project.slug) }}" data-preview="{{ project.slug }}" data-accent="{{ project.accent }}">
+        <div class="project-preview"><canvas width="600" height="360" aria-hidden="true"></canvas></div>
+        <div class="project-meta"><span>{{ "%02d"|format(loop.index) }}</span><span>{{ project.year }}</span></div>
+        <h3>{{ project.title }}</h3>
+        <p>{{ project.description }}</p>
+        <span class="open-label">Open <i>↗</i></span>
+      </a>
+      {% endfor %}
+    </section>
+    <section class="archive-note">
+      <p class="eyebrow">A note on the restoration</p>
+      <p>The Python logic is the artifact. The web work is a frame around it: responsive controls, legible states, and a way to start over when a game ends.</p>
+    </section>
+  </main>
+  <footer class="site-footer wrap">
+    <span>Built by Rithwik, revisited 2026</span>
+    <a href="https://github.com/Rithwik-G/games">Source on GitHub ↗</a>
+  </footer>
 </body>
 </html>

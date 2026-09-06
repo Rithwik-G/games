@@ -399,4 +399,5 @@ async def main():
 		pygame.display.update()
 		await asyncio.sleep(0)
 
-asyncio.run(main())
+if __name__ == "__main__":
+	asyncio.run(main())
