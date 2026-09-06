@@ -1,0 +1,5 @@
+.git/
+.vercel/
+**/__pycache__/
+**/build/
+*.pyc
