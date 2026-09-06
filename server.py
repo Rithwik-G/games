@@ -16,54 +16,54 @@ python_engine_lock = Lock()
 PROJECTS = [
     {
         "slug": "connect-four", "title": "Connect Four", "year": "2020", "kind": "game · minimax",
-        "description": "The original alpha-beta Connect Four engine, now with a quick browser board and a proper rematch loop.",
-        "note": "The computer still prefers the center columns and searches ahead using the original minimax idea.",
+        "description": "A Connect Four opponent powered by alpha-beta minimax, with a quick browser board and rematches.",
+        "note": "The computer prefers the center columns and searches ahead with alpha-beta pruning.",
         "controls": "Click a column to drop a piece.", "accent": "red",
         "source_url": "https://github.com/Rithwik-G/games/tree/main/Connect4",
     },
     {
         "slug": "snake", "title": "Snake / Snake AI", "year": "2021", "kind": "game · hamiltonian path",
         "description": "Play the 20×20 Snake board yourself, or let the Hamiltonian-cycle AI patiently fill it.",
-        "note": "The Python backend runs the original grid, movement, apple, and active Hamiltonian shortcut logic; Canvas only draws each returned state.",
+        "note": "A Python backend handles the 20×20 grid, movement, apples, and Hamiltonian shortcut logic.",
         "controls": "Arrow keys or WASD. Space pauses; R restarts.", "accent": "green",
         "source_url": "https://github.com/Rithwik-G/games/tree/main/SnakeAI",
     },
     {
         "slug": "hangman", "title": "Hangman", "year": "2020", "kind": "game · two player",
-        "description": "One person enters a secret phrase, then hands the screen over for the original local two-player game.",
-        "note": "The nine-part drawing and pass-the-keyboard format are preserved; the input and end states are simply clearer.",
+        "description": "One person enters a secret phrase, then hands the screen over for a local two-player round.",
+        "note": "Nine misses, a pass-the-keyboard setup, and a clean new-round loop.",
         "controls": "Type or click letters. R starts a new round.", "accent": "ink",
         "source_url": "https://github.com/Rithwik-G/games/tree/main/Hangman",
     },
     {
         "slug": "rubiks-cube", "title": "Rubik’s Cube", "year": "2021", "kind": "project · cube solver",
         "description": "A compact cube workbench for turning, scrambling, and replaying a solution in the browser.",
-        "note": "The original 2,000-line Piece model and solve3x3 routine run in Python; a thin canvas adapter keeps the interactive 3D view browser-friendly.",
+        "note": "A 2,000-line Piece model and solve3x3 routine run in Python, paired with an interactive canvas-rendered 3D view.",
         "controls": "Use the face buttons; hold Shift for counter-clockwise turns.", "accent": "blue",
         "source_url": "https://github.com/Rithwik-G/games/tree/main/RubiksCube",
     },
     {
         "slug": "space-invaders", "title": "Space Invaders", "year": "2021", "kind": "game · arcade",
-        "description": "The six-enemy arcade loop, rebuilt around the original movement, collision, and respawn rules.",
-        "note": "The browser version replaces absolute file paths and adds touch controls, pause, and a clean restart.",
+        "description": "A six-enemy arcade loop with movement, collision, firing, scoring, and respawns.",
+        "note": "Includes keyboard and touch controls, pause, and a clean restart.",
         "controls": "Left/right or A/D to move. Space fires.", "accent": "violet", "source_url": None,
     },
     {
         "slug": "tic-tac-toe", "title": "Tic-Tac-Toe", "year": "2020", "kind": "game · minimax",
-        "description": "A tiny, stubborn opponent using the same alpha-beta minimax idea as the original desktop build.",
-        "note": "You are O, the computer is X, and—just as in the Python version—the computer opens.",
+        "description": "A tiny, stubborn opponent powered by alpha-beta minimax.",
+        "note": "You are O, the computer is X, and the computer opens.",
         "controls": "Click an empty square.", "accent": "blue", "source_url": None,
     },
     {
         "slug": "sorting-lab", "title": "Sorting Lab", "year": "2020", "kind": "project · algorithms",
-        "description": "Compare the sorting routines from a sprawling early algorithm visualizer, one operation at a time.",
-        "note": "Bubble, selection, insertion, merge, and quicksort are all based on algorithms in the original Python file.",
+        "description": "Compare five sorting routines one operation at a time.",
+        "note": "Bubble, selection, insertion, merge, and quicksort share one visual workspace.",
         "controls": "Pick an algorithm and press Run.", "accent": "green", "source_url": None,
     },
     {
         "slug": "pathfinding-lab", "title": "Pathfinding Lab", "year": "2020–25", "kind": "project · algorithms",
         "description": "Draw walls and watch A*, Dijkstra, breadth-first, depth-first, or greedy search work through them.",
-        "note": "This keeps the unusually broad algorithm menu and maze idea from the Pygame/Tkinter visualizer.",
+        "note": "Includes five search strategies, editable walls, and a maze generator.",
         "controls": "Drag to draw walls, then press Visualize.", "accent": "red", "source_url": None,
     },
 ]
@@ -143,7 +143,7 @@ def rubiks_cube_solve():
         abort(400)
     with python_engine_lock:
         solution = rubiks_cube.solve(moves)
-    return jsonify({"solution": solution, "engine": "original-python", "solver": "RubiksCube/main.py:solve3x3"})
+    return jsonify({"solution": solution, "engine": "python", "solver": "solve3x3"})
 
 
 @app.post("/api/snake/new")
@@ -183,7 +183,7 @@ def snake_tick():
         "over": bool(state.get("over", False)),
         "won": bool(state.get("won", False)),
         "moves": state["moves"],
-        "engine": "original-python",
+        "engine": "python",
     }
     with python_engine_lock:
         state = snake.tick(state, direction)

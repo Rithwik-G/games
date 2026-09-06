@@ -39,7 +39,7 @@
   }
 
   function snakeGame() {
-    root.innerHTML = '<div class="game-stack"><div class="game-toolbar"></div><div class="canvas-wrap"><canvas class="game-canvas" width="600" height="600"></canvas><div class="game-overlay"><div class="overlay-card"><h2>Snake</h2><p>Twenty by twenty, just like the original.</p><button class="primary-button" type="button">Start</button></div></div></div><div class="touch-controls" aria-label="Touch controls"><button data-dir="left">←</button><button data-dir="up">↑</button><button data-dir="down">↓</button><button data-dir="right">→</button></div></div>';
+    root.innerHTML = '<div class="game-stack"><div class="game-toolbar"></div><div class="canvas-wrap"><canvas class="game-canvas" width="600" height="600"></canvas><div class="game-overlay"><div class="overlay-card"><h2>Snake</h2><p>Fill the board without hitting a wall.</p><button class="primary-button" type="button">Start</button></div></div></div><div class="touch-controls" aria-label="Touch controls"><button data-dir="left">←</button><button data-dir="up">↑</button><button data-dir="down">↓</button><button data-dir="right">→</button></div></div>';
     const canvas=root.querySelector('canvas'),ctx=canvas.getContext('2d'),overlay=root.querySelector('.game-overlay'),toolbar=root.querySelector('.game-toolbar');
     let snake, apple, dir, nextDir, timer, playing=false, paused=false, ai=false;
     const modePlay=button('Play yourself',()=>{ai=false;restart();start();},'primary-button'); const modeAI=button('Watch the AI',()=>{ai=true;restart();start();}); const pause=button('Pause',()=>togglePause()); toolbar.append(modePlay,modeAI,pause);
@@ -51,7 +51,7 @@
     const tick=()=>{if(!playing||paused)return;if(ai){const i=cycleIndex.get(key(snake[0]));const n=cycle[(i+1)%cycle.length];dir=n[0]>snake[0][0]?'right':n[0]<snake[0][0]?'left':n[1]>snake[0][1]?'down':'up';}else dir=nextDir; const delta={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]}[dir];const head=[snake[0][0]+delta[0],snake[0][1]+delta[1]];const eating=apple&&head[0]===apple[0]&&head[1]===apple[1];const body=eating?snake:snake.slice(0,-1);if(head[0]<0||head[0]>=20||head[1]<0||head[1]>=20||body.some(p=>key(p)===key(head))){playing=false;overlay.hidden=false;overlay.querySelector('h2').textContent='Game over';overlay.querySelector('p').textContent=`Score ${Math.max(0,snake.length-3)}`;overlay.querySelector('button').textContent='Try again';setStatus('Game over');return;}snake.unshift(head);if(eating)placeApple();else snake.pop();draw();setStatus(`${ai?'AI running':'Playing'} · score ${snake.length-3}`);if(snake.length===400){playing=false;setStatus('Perfect board');}}
     const start=()=>{overlay.hidden=true;playing=true;paused=false;pause.textContent='Pause';clearInterval(timer);timer=setInterval(tick,100);setStatus(ai?'AI running':'Playing');};
     const togglePause=()=>{if(!playing)return;paused=!paused;pause.textContent=paused?'Resume':'Pause';setStatus(paused?'Paused':ai?'AI running':'Playing');};
-    restart=()=>{clearInterval(timer);playing=false;paused=false;if(ai){snake=[cycle[0],cycle[cycle.length-1],cycle[cycle.length-2]];dir='right';}else{snake=[[10,10],[10,11],[10,12]];dir='up';}nextDir=dir;placeApple();draw();overlay.hidden=false;overlay.querySelector('h2').textContent=ai?'Snake AI':'Snake';overlay.querySelector('p').textContent=ai?'Following a Hamiltonian cycle.':'Twenty by twenty, just like the original.';overlay.querySelector('button').textContent=ai?'Run AI':'Start';setStatus('Ready');modePlay.classList.toggle('primary-button',!ai);modeAI.classList.toggle('primary-button',ai);};
+    restart=()=>{clearInterval(timer);playing=false;paused=false;if(ai){snake=[cycle[0],cycle[cycle.length-1],cycle[cycle.length-2]];dir='right';}else{snake=[[10,10],[10,11],[10,12]];dir='up';}nextDir=dir;placeApple();draw();overlay.hidden=false;overlay.querySelector('h2').textContent=ai?'Snake AI':'Snake';overlay.querySelector('p').textContent=ai?'Following a Hamiltonian cycle.':'Fill the board without hitting a wall.';overlay.querySelector('button').textContent=ai?'Run AI':'Start';setStatus('Ready');modePlay.classList.toggle('primary-button',!ai);modeAI.classList.toggle('primary-button',ai);};
     overlay.querySelector('button').addEventListener('click',start);root.querySelectorAll('[data-dir]').forEach(b=>b.addEventListener('click',()=>setDirection(b.dataset.dir)));window.addEventListener('keydown',e=>{const map={ArrowUp:'up',w:'up',ArrowDown:'down',s:'down',ArrowLeft:'left',a:'left',ArrowRight:'right',d:'right'};if(map[e.key]){e.preventDefault();setDirection(map[e.key]);}if(e.code==='Space'){e.preventDefault();togglePause();}if(e.key.toLowerCase()==='r')restart();});restart();
   }
 
@@ -127,7 +127,7 @@
   }
 
   function rubiksCube3D() {
-    root.innerHTML = '<div class="cube-workbench"><div class="canvas-wrap cube-view"><canvas class="cube-canvas" width="720" height="540" aria-label="Interactive 3D Rubik’s Cube"></canvas><span class="drag-hint">Drag to rotate view</span></div><div class="cube-moves"></div><p class="move-log"></p><div class="game-toolbar cube-actions"></div><p class="game-caption">3D browser renderer · original Piece turns and solve3x3 run in Python</p></div>';
+    root.innerHTML = '<div class="cube-workbench"><div class="canvas-wrap cube-view"><canvas class="cube-canvas" width="720" height="540" aria-label="Interactive 3D Rubik’s Cube"></canvas><span class="drag-hint">Drag to rotate view</span></div><div class="cube-moves"></div><p class="move-log"></p><div class="game-toolbar cube-actions"></div><p class="game-caption">Interactive 3D cube · Python solver</p></div>';
     const canvas=root.querySelector('canvas'),ctx=canvas.getContext('2d'),movesEl=root.querySelector('.cube-moves'),log=root.querySelector('.move-log'),actions=root.querySelector('.cube-actions');
     let stickers=[],history=[],solving=false,yaw=-.62,pitch=.46,dragging=false,lastPointer=null;
     const colors={U:'#f3f1ea',D:'#e1bf49',F:'#4f855e',B:'#4b68ad',R:'#c94e43',L:'#dc873c'};
@@ -141,15 +141,15 @@
     const polygonFor=sticker=>{const n=sticker.n;let a,b;if(Math.abs(n[0])===1){a=[0,.43,0];b=[0,0,.43];}else if(Math.abs(n[1])===1){a=[.43,0,0];b=[0,0,.43];}else{a=[.43,0,0];b=[0,.43,0];}const center=sticker.p.map((v,i)=>v*1.02+n[i]*.53);return[[-1,-1],[1,-1],[1,1],[-1,1]].map(([u,v])=>camera(center.map((q,i)=>q+a[i]*u+b[i]*v)));};
     const render=()=>{ctx.fillStyle='#171714';ctx.fillRect(0,0,720,540);const faces=stickers.filter(sticker=>cameraVector(sticker.n).z>.02).map(sticker=>({sticker,points:polygonFor(sticker)}));faces.sort((a,b)=>a.points.reduce((n,p)=>n+p.z,0)-b.points.reduce((n,p)=>n+p.z,0));faces.forEach(({sticker,points})=>{ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fillStyle=sticker.color;ctx.fill();ctx.strokeStyle='#171714';ctx.lineWidth=4;ctx.stroke();});log.textContent=history.length?history.slice(-28).join('  '):'No moves yet';};
     'R L U D F B'.split(' ').forEach(face=>{const el=button(face,event=>{if(!solving)turn(event.shiftKey?face+"'":face);});el.title=`${face}; Shift-click for ${face}′`;movesEl.append(el);});
-    const scramble=()=>{if(solving)return;resetState();const faces='RLUDFB';let last='';for(let i=0;i<20;i++){let face;do{face=faces[Math.floor(Math.random()*6)];}while(face===last);last=face;turn(face+(Math.random()>.5?"'":''));}setStatus('Scrambled · original Python solver ready');};
-    const solve=async()=>{if(solving||!history.length)return;solving=true;actions.querySelectorAll('button').forEach(el=>el.disabled=true);setStatus('Running your original Python solve3x3');try{const response=await fetch('/api/rubiks-cube/solve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({moves:history})});if(!response.ok)throw new Error();const data=await response.json();history=[];let index=0;const step=()=>{if(index>=data.solution.length){solving=false;actions.querySelectorAll('button').forEach(el=>el.disabled=false);render();setStatus('Solved · original Python solve3x3');return;}turn(data.solution[index++],false);setStatus(`Solving in Python · ${data.solution.length-index} moves left`);setTimeout(step,38);};step();}catch{solving=false;actions.querySelectorAll('button').forEach(el=>el.disabled=false);setStatus('Python solver could not complete');}};
+    const scramble=()=>{if(solving)return;resetState();const faces='RLUDFB';let last='';for(let i=0;i<20;i++){let face;do{face=faces[Math.floor(Math.random()*6)];}while(face===last);last=face;turn(face+(Math.random()>.5?"'":''));}setStatus('Scrambled · Python solver ready');};
+    const solve=async()=>{if(solving||!history.length)return;solving=true;actions.querySelectorAll('button').forEach(el=>el.disabled=true);setStatus('Running Python solver');try{const response=await fetch('/api/rubiks-cube/solve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({moves:history})});if(!response.ok)throw new Error();const data=await response.json();history=[];let index=0;const step=()=>{if(index>=data.solution.length){solving=false;actions.querySelectorAll('button').forEach(el=>el.disabled=false);render();setStatus('Solved');return;}turn(data.solution[index++],false);setStatus(`Solving in Python · ${data.solution.length-index} moves left`);setTimeout(step,38);};step();}catch{solving=false;actions.querySelectorAll('button').forEach(el=>el.disabled=false);setStatus('Python solver could not complete');}};
     actions.append(button('Scramble',scramble,'primary-button'),button('Solve with Python',solve),button('Reset',resetState));
     canvas.addEventListener('pointerdown',event=>{dragging=true;lastPointer=[event.clientX,event.clientY];canvas.setPointerCapture(event.pointerId);});canvas.addEventListener('pointermove',event=>{if(!dragging)return;yaw+=(event.clientX-lastPointer[0])*.009;pitch=Math.max(-1.2,Math.min(1.2,pitch+(event.clientY-lastPointer[1])*.009));lastPointer=[event.clientX,event.clientY];render();});canvas.addEventListener('pointerup',()=>dragging=false);
     restart=resetState;window.addEventListener('keydown',event=>{const face=event.key.toUpperCase();if(moveMap[face]&&!solving)turn(face+(event.shiftKey?"'":''));});resetState();
   }
 
   function connectFourPython() {
-    root.innerHTML = '<div class="game-stack"><p class="game-caption">Python engine · your original minimax from Connect4/main.py</p><div class="connect-board" role="grid" aria-label="Connect Four board"></div></div>';
+    root.innerHTML = '<div class="game-stack"><p class="game-caption">Python engine · alpha-beta minimax</p><div class="connect-board" role="grid" aria-label="Connect Four board"></div></div>';
     const boardEl = root.querySelector('.connect-board');
     let state = null;
     let waiting = true;
@@ -187,13 +187,13 @@
     };
     const move = async column => {
       if (waiting || state?.winner) return;
-      waiting = true; render(); setStatus('Your Python minimax is thinking');
+      waiting = true; render(); setStatus('Minimax is thinking');
       try { state = await requestState('/api/connect-four/move', {column}); announce(); }
       catch (error) { setStatus('Could not reach Python engine'); }
       waiting = false; render();
     };
     restart = async () => {
-      waiting = true; render(); setStatus('Starting original Python engine');
+      waiting = true; render(); setStatus('Starting Python engine');
       try { state = await requestState('/api/connect-four/new'); announce(); }
       catch (error) { setStatus('Could not reach Python engine'); }
       waiting = false; render();
@@ -202,7 +202,7 @@
   }
 
   function ticTacToePython() {
-    root.innerHTML = '<div class="game-stack"><p class="game-caption">Python engine · minimax extracted from your 2020 Pygame file</p><div class="ttt-board" role="grid"></div></div>';
+    root.innerHTML = '<div class="game-stack"><p class="game-caption">Python engine · alpha-beta minimax</p><div class="ttt-board" role="grid"></div></div>';
     const boardEl = root.querySelector('.ttt-board');
     let state = null;
     let waiting = true;
@@ -215,13 +215,13 @@
     };
     const announce = () => setStatus(state.winner==='X'?'Computer wins':state.winner==='O'?'You win':state.winner==='draw'?'Draw':'Your turn · O · Python engine');
     const requestState = async (url,body) => {const response=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});if(!response.ok)throw new Error();return response.json();};
-    const move = async index => {if(waiting||state?.winner)return;waiting=true;render();setStatus('Your Python minimax is thinking');try{state=await requestState('/api/tic-tac-toe/move',{index});announce();}catch{setStatus('Could not reach Python engine');}waiting=false;render();};
-    restart = async () => {waiting=true;render();setStatus('Starting original Python engine');try{state=await requestState('/api/tic-tac-toe/new');announce();}catch{setStatus('Could not reach Python engine');}waiting=false;render();};
+    const move = async index => {if(waiting||state?.winner)return;waiting=true;render();setStatus('Minimax is thinking');try{state=await requestState('/api/tic-tac-toe/move',{index});announce();}catch{setStatus('Could not reach Python engine');}waiting=false;render();};
+    restart = async () => {waiting=true;render();setStatus('Starting Python engine');try{state=await requestState('/api/tic-tac-toe/new');announce();}catch{setStatus('Could not reach Python engine');}waiting=false;render();};
     restart();
   }
 
   function snakeGamePython() {
-    root.innerHTML = '<div class="game-stack"><div class="game-toolbar"></div><div class="canvas-wrap"><canvas class="game-canvas" width="600" height="600"></canvas><div class="game-overlay"><div class="overlay-card"><h2>Snake</h2><p>Your original 20 × 20 Python game.</p><button class="primary-button" type="button">Start</button></div></div></div><div class="touch-controls" aria-label="Touch controls"><button data-dir="left">←</button><button data-dir="up">↑</button><button data-dir="down">↓</button><button data-dir="right">→</button></div><p class="game-caption">Python engine · movement and Hamiltonian shortcut logic from Snake/main.py and SnakeAI/main.py</p></div>';
+    root.innerHTML = '<div class="game-stack"><div class="game-toolbar"></div><div class="canvas-wrap"><canvas class="game-canvas" width="600" height="600"></canvas><div class="game-overlay"><div class="overlay-card"><h2>Snake</h2><p>Play on a 20 × 20 grid.</p><button class="primary-button" type="button">Start</button></div></div></div><div class="touch-controls" aria-label="Touch controls"><button data-dir="left">←</button><button data-dir="up">↑</button><button data-dir="down">↓</button><button data-dir="right">→</button></div><p class="game-caption">Python engine · movement and Hamiltonian shortcut logic</p></div>';
     const canvas=root.querySelector('canvas'),ctx=canvas.getContext('2d'),overlay=root.querySelector('.game-overlay'),toolbar=root.querySelector('.game-toolbar');
     let state=null,playing=false,paused=false,ai=false,pendingDirection=null,timer=null,generation=0;
     const modePlay=button('Play yourself',()=>changeMode(false),'primary-button');
@@ -234,7 +234,7 @@
     const schedule=token=>{clearTimeout(timer);if(playing&&!paused)timer=setTimeout(()=>tick(token),ai?24:100);};
     const tick=async token=>{if(token!==generation||!playing||paused)return;try{const nextState=await requestState('/api/snake/tick',{direction:pendingDirection,state});if(token!==generation)return;state=nextState;pendingDirection=null;draw();if(state.over){playing=false;showOverlay(state.won?'Perfect board':'Game over',`Score ${state.score}`,ai?'Run again':'Try again');setStatus(state.won?'Perfect board':`Game over · score ${state.score}`);return;}setStatus(`${ai?'AI running':'Playing'} · score ${state.score} · Python engine`);schedule(token);}catch{if(token!==generation)return;playing=false;showOverlay('Connection paused','The Python game engine could not be reached.','Restart');setStatus('Could not reach Python engine');}};
     const start=()=>{overlay.hidden=true;playing=true;paused=false;pause.textContent='Pause';const token=++generation;setStatus(`${ai?'AI running':'Playing'} · Python engine`);schedule(token);};
-    const reset=async()=>{generation++;clearTimeout(timer);playing=false;paused=false;pendingDirection=null;pause.textContent='Pause';setStatus('Starting original Python game');try{state=await requestState('/api/snake/new',{ai});draw();showOverlay(ai?'Snake AI':'Snake',ai?'Running your original Hamiltonian shortcut logic.':'Your original 20 × 20 Python game.',ai?'Run AI':'Start');setStatus('Ready · Python engine');}catch{showOverlay('Connection paused','The Python game engine could not be reached.','Retry');setStatus('Could not reach Python engine');}modePlay.classList.toggle('primary-button',!ai);modeAI.classList.toggle('primary-button',ai);};
+    const reset=async()=>{generation++;clearTimeout(timer);playing=false;paused=false;pendingDirection=null;pause.textContent='Pause';setStatus('Starting Python game');try{state=await requestState('/api/snake/new',{ai});draw();showOverlay(ai?'Snake AI':'Snake',ai?'Running Hamiltonian shortcut logic.':'Play on a 20 × 20 grid.',ai?'Run AI':'Start');setStatus('Ready · Python engine');}catch{showOverlay('Connection paused','The Python game engine could not be reached.','Retry');setStatus('Could not reach Python engine');}modePlay.classList.toggle('primary-button',!ai);modeAI.classList.toggle('primary-button',ai);};
     const changeMode=nextAI=>{ai=nextAI;reset();};
     const setDirection=direction=>{if(!ai)pendingDirection=direction;};
     const togglePause=()=>{if(!playing)return;paused=!paused;pause.textContent=paused?'Resume':'Pause';setStatus(paused?'Paused':`${ai?'AI running':'Playing'} · Python engine`);if(!paused)schedule(generation);};

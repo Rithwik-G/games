@@ -1,14 +1,10 @@
 ## My Games
 
-This is a collection of games and algorithm projects I programmed mostly around
-2020–2021, lightly restored so they are pleasant to play in a browser at
+This is my collection of games and algorithm projects, playable at
 [games.rithwikg.com](https://games.rithwikg.com).
 
-The original Python/Pygame sources remain in their project folders. For the
-turn-based games, Snake, Snake AI, and Rubik's Cube, the site calls the original
-algorithms on the Flask/Python side and uses a thin browser layer for drawing and
-input. The remaining real-time projects keep their original mechanics while
-browser-specific adapters provide responsive keyboard and touch input.
+The game logic runs in Flask/Python, while the browser handles drawing and
+responsive keyboard, pointer, and touch input.
 
 ### Included
 

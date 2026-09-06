@@ -46,7 +46,7 @@ def new_game(ai=False):
         "over": False,
         "won": False,
         "moves": 0,
-        "engine": "original-python",
+        "engine": "python",
     }
     state["apple"] = create_apple(state["snake"])
     return state
