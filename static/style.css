@@ -36,9 +36,7 @@ a { color: inherit; }
 .open-label { font-family: var(--mono); font-size: 11px; text-transform: uppercase; }
 .open-label i { display: inline-block; margin-left: 3px; font-style: normal; transition: transform .16s ease; }
 .project-card:hover .open-label i { transform: translate(2px, -2px); }
-.archive-note { margin: 120px 0; padding: 34px 0 0 50%; border-top: 1px solid var(--line); }
-.archive-note > p:last-child { max-width: 500px; margin: 0; font-size: 25px; line-height: 1.4; letter-spacing: -.035em; }
-.site-footer { min-height: 100px; display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 12px; border-top: 1px solid var(--line); }
+.site-footer { min-height: 84px; display: flex; justify-content: flex-end; align-items: center; color: var(--muted); font-size: 12px; border-top: 1px solid var(--line); }
 .site-footer a { text-decoration: none; }
 .game-layout { padding-bottom: 80px; }
 .game-heading { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: end; padding: 74px 0 52px; }
@@ -117,7 +115,6 @@ button:disabled:hover { background: var(--white); color: var(--ink); }
   .intro h1 { font-size: clamp(54px, 16vw, 82px); }
   .lede { margin-left: 0; }
   .project-grid { grid-template-columns: 1fr 1fr; }
-  .archive-note { margin: 82px 0; padding-left: 25%; }
   .game-heading { grid-template-columns: 1fr; gap: 24px; }
   .game-heading > p { margin-left: 0; }
   .game-root { min-height: 560px; padding: 18px; }
@@ -128,8 +125,6 @@ button:disabled:hover { background: var(--white); color: var(--ink); }
   .site-header { height: 70px; }
   .project-grid { grid-template-columns: 1fr; }
   .project-card > p { min-height: 0; }
-  .archive-note { padding-left: 0; }
-  .site-footer { align-items: flex-start; flex-direction: column; justify-content: center; gap: 7px; }
   .game-heading { padding: 55px 0 36px; }
   .game-root { min-height: 500px; padding: 12px; }
   .hangman-layout { grid-template-columns: 1fr; }
