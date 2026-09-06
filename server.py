@@ -1,6 +1,5 @@
 import os
 from threading import Lock
-from uuid import uuid4
 
 from flask import Flask, abort, jsonify, redirect, render_template, request, session, url_for
 
@@ -12,7 +11,6 @@ from original_logic import snake
 app = Flask(__name__)
 app.secret_key = os.environ.get("GAMES_SESSION_KEY", "local-games-development-key")
 python_engine_lock = Lock()
-snake_states = {}
 
 
 PROJECTS = [
@@ -151,24 +149,42 @@ def rubiks_cube_solve():
 @app.post("/api/snake/new")
 def snake_new():
     payload = request.get_json(silent=True) or {}
-    game_id = session.get("snake_game_id") or uuid4().hex
-    session["snake_game_id"] = game_id
     with python_engine_lock:
         state = snake.new_game(payload.get("ai", False))
-        snake_states[game_id] = state
     return jsonify(snake.public_state(state))
 
 
 @app.post("/api/snake/tick")
 def snake_tick():
-    game_id = session.get("snake_game_id")
-    state = snake_states.get(game_id)
-    if state is None:
-        abort(400)
     payload = request.get_json(silent=True) or {}
+    state = payload.get("state")
     direction = payload.get("direction")
-    if direction is not None and direction not in {"up", "down", "left", "right"}:
+    positions = state.get("snake") if isinstance(state, dict) else None
+    apple = state.get("apple") if isinstance(state, dict) else None
+    valid_position = lambda position: (
+        isinstance(position, list) and len(position) == 2
+        and all(isinstance(value, int) and 0 <= value < 20 for value in position)
+    )
+    if (
+        not isinstance(positions, list) or not 1 <= len(positions) <= 400
+        or not all(valid_position(position) for position in positions)
+        or not valid_position(apple)
+        or state.get("direction") not in {"up", "down", "left", "right"}
+        or not isinstance(state.get("ai"), bool)
+        or not isinstance(state.get("moves"), int)
+        or direction is not None and direction not in {"up", "down", "left", "right"}
+    ):
         abort(400)
+    state = {
+        "snake": positions,
+        "apple": apple,
+        "direction": state["direction"],
+        "ai": state["ai"],
+        "over": bool(state.get("over", False)),
+        "won": bool(state.get("won", False)),
+        "moves": state["moves"],
+        "engine": "original-python",
+    }
     with python_engine_lock:
         state = snake.tick(state, direction)
     return jsonify(snake.public_state(state))
