@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Small games and experiments by Rithwik Gupta, made mostly around 2020–2021 and restored for the web.">
-  <title>Games — Rithwik Gupta</title>
+  <title>Small Games — Rithwik Gupta</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script defer src="{{ url_for('static', filename='gallery.js') }}"></script>
 </head>
@@ -15,13 +15,11 @@
   </header>
   <main class="wrap">
     <section class="intro">
-      <p class="eyebrow">An old folder, made playable</p>
-      <h1>Small games and<br>side projects.</h1>
-      <p class="lede">I made most of these in Python around 2020–2021. They’ve been lightly restored for the browser—same ideas, fewer rough edges.</p>
+      <h1>Small<br>Games</h1>
+      <p class="lede">I made most of these in Python around 2020–2021. They’ve been lightly restored for the browser.</p>
     </section>
     <div class="collection-heading">
-      <h2>The collection</h2>
-      <p>{{ projects|length }} things to play with</p>
+      <h2>The Games</h2>
     </div>
     <section class="project-grid" aria-label="Games and projects">
       {% for project in projects %}
